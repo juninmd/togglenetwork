@@ -16,7 +16,7 @@ namespace ToggleNetwork
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            InterceptKeys.Init();
+            Application.Run(new formPrincipal());
         }
     }
 }
