@@ -12,8 +12,13 @@ namespace ToggleNetwork
         }
         private static void Toogle(string interfaceName, bool activate)
         {
-            var item = new ManagementObjectSearcher(new SelectQuery("SELECT * FROM Win32_NetworkAdapter WHERE NetConnectionId != NULL")).Get().Cast<ManagementObject>().FirstOrDefault(x => ((string)x["NetConnectionId"]) == interfaceName);
-            item?.InvokeMethod(activate ? "Enable" : "Disable", null);
+            using (var searcher = new ManagementObjectSearcher(new SelectQuery("SELECT * FROM Win32_NetworkAdapter WHERE NetConnectionId != NULL")))
+            using (var results = searcher.Get())
+            {
+                var item = results.Cast<ManagementObject>().FirstOrDefault(x => ((string)x["NetConnectionId"]) == interfaceName);
+                item?.InvokeMethod(activate ? "Enable" : "Disable", null);
+                item?.Dispose();
+            }
         }
     }
 }
